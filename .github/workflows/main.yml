@@ -73,7 +73,7 @@ jobs:
       - name: List Modified Files
         run: |
           echo "Archivos modificados:"
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+          git diff --name-only ${{ github.event.before }}
 
       - name: Print Pipeline Finished
         run: echo "La pipeline ha finalizado exitosamente."
