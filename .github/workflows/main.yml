@@ -19,6 +19,7 @@ jobs:
         uses: github/super-linter@v4
         env:
           VALIDATE_TSX: true
+          VALIDATE_TS: true
     
   run-tests:
       name: Run Tests
