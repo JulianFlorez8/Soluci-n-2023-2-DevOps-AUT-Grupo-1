@@ -1,0 +1,43 @@
+name: Solución-2023-2-DevOps-AUT-Grupo-1
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js v18
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Run tests
+        run: ng test --watch=false --browsers=ChromeHeadless
+
+      - name: Build
+        run: npm run build
+
+      - name: List Modified Files
+        run: |
+          echo "Archivos modificados:"
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+
+      - name: Print Pipeline Finished
+        run: echo "La pipeline ha finalizado exitosamente."
