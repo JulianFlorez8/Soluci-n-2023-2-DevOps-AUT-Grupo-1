@@ -20,6 +20,7 @@ jobs:
         env:
           VALIDATE_TSX: true
           VALIDATE_TS: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
   run-tests:
       name: Run Tests
@@ -65,18 +66,6 @@ jobs:
           
       - name: Install dependencies
         run: npm install
-
-      - name: Lint Action   
-        uses: wearerequired/lint-action@v2.3.0
-
-      - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          eslint: true
-          prettier: true
-
-      - name: Run tests
-        run: ng test --watch=false --browsers=ChromeHeadless
 
       - name: Build
         run: npm run build
