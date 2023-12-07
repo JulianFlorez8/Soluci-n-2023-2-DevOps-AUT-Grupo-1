@@ -7,15 +7,57 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_TSX: true
+          VALIDATE_TS: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+  run-tests:
+      name: Run Tests
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+    
+        - name: Use Node.js v18
+          uses: actions/setup-node@v4
+          with:
+            node-version: '18'
+    
+        - name: Install Angular CLI
+          run: npm install -g @angular/cli
+    
+        - name: Install dependencies
+          run: npm install
+    
+        - name: Run tests
+          run: ng test --watch=false --browsers=ChromeHeadless
+    
+        - name: Print Test Results
+          run: |
+            echo "Tests ejecutados correctamente"
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Use Node.js v18
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
@@ -25,19 +67,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Linting
-        run: npm run lint
-
-      - name: Run tests
-        run: ng test --watch=false --browsers=ChromeHeadless
-
       - name: Build
         run: npm run build
 
       - name: List Modified Files
         run: |
           echo "Archivos modificados:"
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
+          git diff --name-only ${{ github.event.before }}
 
       - name: Print Pipeline Finished
         run: echo "La pipeline ha finalizado exitosamente."
